@@ -100,7 +100,7 @@ This should allow wildcard matching and should return any records which have the
 
 ### Challenge three
 
-Currently there is no way to display these records to the user. We have a [`build/index.html`](https://github.com/simonfl3tcher/flynotes-api-friendzy/blob/master/build/index.html) file which is displayed to users on the route `GET /`.
+Currently there is no way to display these records to the user. We have a [`build/index.html`](https://github.com/Flynotes/api-friendzy/blob/master/build/index.html) file which is displayed to users on the route `GET /`.
 
 We would like you to consume the `GET /api/friends` endpoint and display friends to the user on the `GET /` route.
 As a user you should be able to filter the records via an input, which submits to the `API /api/friends?filter=${value}` endpoint you built in
