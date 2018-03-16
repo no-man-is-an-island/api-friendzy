@@ -49,7 +49,7 @@
 
     getFriends: function (filter) {
       $.getJSON("/api/friends",
-        (this.state.filter === "") ? {} : {filter: filter},
+        (filter === "") ? {} : {filter: filter},
         function (response) {
           this.setState({friends: response})
         }.bind(this));
