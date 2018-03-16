@@ -16,8 +16,21 @@
             padding-top: 50px;
         }
 
-        .friend {
+        li.friend {
             list-style: none;
+            padding: 5px;
+            margin-bottom: 5px;
+            width: fit-content;
+        }
+
+        ul.friendsList {
+            padding-top: 10px;
+            padding-left: 0px;
+        }
+
+        .extendedFriend {
+            padding-top: 10px;
+            padding-left: 10px;
         }
     </style>
 </head>
@@ -89,7 +102,7 @@
         return <Friend friend={friend} key={friend.id}/>
       });
       return (
-        <ul>
+        <ul className={"friendsList"}>
           {friends}
         </ul>
       );
@@ -98,7 +111,9 @@
 
   var Friend = React.createClass({
      render: function () {
-        return <li className="friend">{this.props.friend.firstName} <ExtendedFriendInformation friendId={this.props.friend.id}/></li>;
+        return <li className="friend">
+          {this.props.friend.firstName} {this.props.friend.lastName} <ExtendedFriendInformation friendId={this.props.friend.id}/>
+        </li>;
       }
     });
 
@@ -119,10 +134,11 @@
       if (this.state.friend === undefined){
         return <a href="#" onClick={this.loadExtendedInformation}> (More..)</a>;
       } else {
-        return <div>
+        return <div className={"extendedFriend"}>
           First Name: {this.state.friend.firstName} <br/>
           Last Name: {this.state.friend.lastName} <br/>
           Email: {this.state.friend.emailAddress} <br/>
+          Created: {this.state.friend.createdAt} <br/>
           </div>
       }
     }
