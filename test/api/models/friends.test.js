@@ -32,14 +32,14 @@ describe('MODEL Friend', () => {
       {
         firstName: 'David',
         lastName: 'Williams',
-        emailAddress: 'david@williams.com',
+        emailAddress: 'dav%id@williams.com',
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         firstName: 'Daniel',
         lastName: 'Peters',
-        emailAddress: 'daniel@pe_ters.com',
+        emailAddress: 'dan_iel@peters.com',
         createdAt: new Date(),
         updatedAt: new Date()
       }])
@@ -53,7 +53,10 @@ describe('MODEL Friend', () => {
         Friend.filter('da*').then(data => expect(data).to.have.lengthOf(2));
         Friend.filter('*a*').then(data => expect(data).to.have.lengthOf(2));
         Friend.filter('*.com').then(data => expect(data).to.have.lengthOf(2));
-        Friend.filter('*_*').then(data => expect(data).to.have.lengthOf(1));
+        Friend.filter('dan_iel@peters.com')
+          .then(data => expect(data).to.have.lengthOf(1));
+        Friend.filter('dav%id@williams.com')
+          .then(data => expect(data).to.have.lengthOf(1));
         Friend.filter('Williams').then(data => {
           expect(data).to.have.lengthOf(1);
           expect(data[0]).to.have.property('firstName').equal('David');
