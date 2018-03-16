@@ -37,15 +37,27 @@ describe('/GET api/friends', () => {
  */
 describe('GET api/friends/:id', () => {
   it('should GET the friend record', done => {
-    Friend.create({
+    const friendToCreate = {
       firstName: 'Borris',
-      lastName: 'Johnson'
-    }).then(record => {
+      lastName: 'Johnson',
+      emailAddress: 'borris@johnson.com'
+    };
+
+    Friend.create(friendToCreate).then(record => {
       chai
         .request(app)
         .get(`/api/friends/${record.id}`)
         .end((_, res) => {
           expect(res).to.have.status(200);
+          expect(res.body)
+            .to.have.property('emailAddress')
+            .equal(friendToCreate.emailAddress);
+          expect(res.body)
+            .to.have.property('firstName')
+            .equal(friendToCreate.firstName);
+          expect(res.body)
+            .to.have.property('lastName')
+            .equal(friendToCreate.lastName);
           done();
         });
     });

@@ -6,6 +6,7 @@ describe('MODEL Friend', () => {
     Friend.create({
       firstName: 'John',
       lastName: 'Doe',
+      emailAddress: 'john@doe.com',
       createdAt: new Date(),
       updatedAt: new Date()
     })
