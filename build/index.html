@@ -15,6 +15,10 @@
         body {
             padding-top: 50px;
         }
+
+        .friend {
+            list-style: none;
+        }
     </style>
 </head>
 <body>
@@ -64,7 +68,6 @@
     },
 
     searchFriends: function (event) {
-      console.log(event)
       event.preventDefault();
       this.props.searchFn(this.state.filter);
       return false
@@ -94,8 +97,34 @@
   });
 
   var Friend = React.createClass({
+     render: function () {
+        return <li className="friend">{this.props.friend.firstName} <ExtendedFriendInformation friendId={this.props.friend.id}/></li>;
+      }
+    });
+
+  var ExtendedFriendInformation = React.createClass({
+    getInitialState: function () {
+      return {}
+    },
+
+    loadExtendedInformation: function (event) {
+      event.preventDefault();
+      $.getJSON(`/api/friends/${this.props.friendId}`,
+        function (response) {
+          this.setState({friend: response})
+        }.bind(this));
+    },
+
     render: function () {
-      return <li className="friend">{this.props.friend.firstName}</li>;
+      if (this.state.friend === undefined){
+        return <a href="#" onClick={this.loadExtendedInformation}> (More..)</a>;
+      } else {
+        return <div>
+          First Name: {this.state.friend.firstName} <br/>
+          Last Name: {this.state.friend.lastName} <br/>
+          Email: {this.state.friend.emailAddress} <br/>
+          </div>
+      }
     }
   });
 
