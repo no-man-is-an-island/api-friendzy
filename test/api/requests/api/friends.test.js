@@ -13,14 +13,6 @@ chai.use(chaiHttp);
 * Test the GET /api/friends route
 */
 describe('/GET api/friends', () => {
-  beforeEach(done => {
-    // Before each test we empty the database
-    Friend.destroy({
-      where: {},
-      truncate: true
-    }).then(() => done());
-  });
-
   it('it should GET all the friends data', done => {
     chai
       .request(app)
@@ -29,6 +21,47 @@ describe('/GET api/friends', () => {
         expect(res).to.have.status(200);
         done();
       });
+  });
+
+  it('Friends can be filtered using the filter query parameter', done => {
+    Friend.bulkCreate([
+      {
+        firstName: 'David',
+        lastName: 'Williams',
+        emailAddress: 'david@williams.com',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        firstName: 'Daniel',
+        lastName: 'Peters',
+        emailAddress: 'daniel@peters.com',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }])
+      .then(() => {
+        chai
+          .request(app)
+          .get('/api/friends')
+          .query({filter: 'Dav*'})
+          .end((_, res) => {
+            expect(res).to.have.status(200);
+            expect(res.body).to.have.lengthOf(1);
+          });
+      }
+      )
+      .then(() => {
+        chai
+          .request(app)
+          .get('/api/friends')
+          .query({filter: 'Da*'})
+          .end((_, res) => {
+            expect(res).to.have.status(200);
+            expect(res.body).to.have.lengthOf(2);
+            done();
+          });
+      }
+      );
   });
 });
 

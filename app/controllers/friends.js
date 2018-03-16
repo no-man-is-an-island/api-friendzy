@@ -2,8 +2,10 @@ const Friend = require('../models').Friend;
 
 module.exports = {
   index: (req, res) => {
-    return Friend.all()
+    return Friend.filter(req.query.filter)
       .then(friends => res.status(200).send(friends))
+
+      // TODO: returning 400 here feels wrong. It implies a user error
       .catch(error => res.status(400).send(error));
   },
   show: (req, res) => {
