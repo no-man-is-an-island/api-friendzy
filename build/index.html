@@ -5,15 +5,103 @@
     <title>API Friendzy</title>
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://fb.me/react-0.14.6.js"></script>
+    <script src="https://fb.me/react-dom-0.14.6.js"></script>
+
+    <!--TODO: remove JSX in browser transformer before this goes to prod.-->
+    <script src="http://fb.me/JSXTransformer-0.12.1.js"></script>
     <style>
-        body { padding-top:50px; }
+        body {
+            padding-top: 50px;
+        }
     </style>
 </head>
 <body>
-  <div class="container">
-    <div class="jumbotron text-center">
-      <h1>Welcome to API Friendzy!</h1>
-    </div>
-  </div>
+<div class="container">
+    <div id="mainContent"></div>
+</div>
+
+<script type="text/jsx">
+  var MainApp = React.createClass({
+    getInitialState: function () {
+      return {
+        friends: []
+      }
+    },
+
+    getFriends: function (filter) {
+      $.getJSON("/api/friends",
+        (this.state.filter === "") ? {} : {filter: filter},
+        function (response) {
+          this.setState({friends: response})
+        }.bind(this));
+    },
+
+    componentDidMount() {
+      this.getFriends()
+    },
+
+    render: function () {
+      return (
+        <div>
+          <Search searchFn={this.getFriends}/>
+          <FriendsList friends={this.state.friends}/>
+        </div>
+      );
+    }
+  });
+
+  var Search = React.createClass({
+    getInitialState: function () {
+      return {
+        filter: ""
+      }
+    },
+
+    changeFilter: function (event) {
+      this.setState({filter: event.target.value});
+    },
+
+    searchFriends: function (event) {
+      console.log(event)
+      event.preventDefault();
+      this.props.searchFn(this.state.filter);
+      return false
+    },
+
+    render: function () {
+      return (
+        <form onSubmit={this.searchFriends}>
+          <input type="text" value={this.props.filter} onChange={this.changeFilter}/>
+          <input type="submit" value={"Search friends.."}/>
+        </form>
+      );
+    }
+  });
+
+  var FriendsList = React.createClass({
+    render: function () {
+      var friends = this.props.friends.map(function (friend) {
+        return <Friend friend={friend} key={friend.id}/>
+      });
+      return (
+        <ul>
+          {friends}
+        </ul>
+      );
+    }
+  });
+
+  var Friend = React.createClass({
+    render: function () {
+      return <li className="friend">{this.props.friend.firstName}</li>;
+    }
+  });
+
+  ReactDOM.render(<MainApp/>, document.getElementById("mainContent"));
+
+</script>
+
 </body>
 </html>
